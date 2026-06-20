@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
+
+body {
+  background:
+    radial-gradient(circle at 10% 10%, #fbe7ff 0%, transparent 35%),
+    radial-gradient(circle at 90% 20%, #e0fff6 0%, transparent 35%),
+    #f3e8ff;
+  color: #3b1f5c;
+  font-family: "Poppins", sans-serif;
+}
+
+.font-display {
+  font-family: "Baloo 2", sans-serif;
+}
+
+.sticker-card:nth-child(odd) {
+  transform: rotate(-1.2deg);
+}
+.sticker-card:nth-child(even) {
+  transform: rotate(1.2deg);
+}
+.sticker-card:hover {
+  transform: rotate(0deg) translateY(-4px);
+}
