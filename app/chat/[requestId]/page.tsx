@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ChatWindow from "@/components/ChatWindow";
+import { getOrCreateProfile } from "@/lib/getOrCreateProfile";
 
 export default async function ChatPage({ params }: { params: { requestId: string } }) {
   const supabase = createClient();
@@ -11,7 +12,7 @@ export default async function ChatPage({ params }: { params: { requestId: string
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+  const profile = await getOrCreateProfile(supabase, user.id, user.email);
 
   const { data: request } = await supabase
     .from("requests")

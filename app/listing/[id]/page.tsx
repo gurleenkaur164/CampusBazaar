@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import RequestButton from "@/components/RequestButton";
 import OwnerRequests from "@/components/OwnerRequests";
+import { getOrCreateProfile } from "@/lib/getOrCreateProfile";
 
 export default async function ListingDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -12,7 +13,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+  const profile = await getOrCreateProfile(supabase, user.id, user.email);
 
   const { data: listing } = await supabase
     .from("listings")

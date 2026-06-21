@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ListingCard from "@/components/ListingCard";
 import type { Listing } from "@/lib/types";
+import { getOrCreateProfile } from "@/lib/getOrCreateProfile";
 
 export default async function HomePage({
   searchParams,
@@ -16,11 +17,15 @@ export default async function HomePage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
+
+  if (!profile) {
+    profile = await getOrCreateProfile(supabase, user.id, user.email);
+  }
 
   let query = supabase
     .from("listings")
@@ -95,3 +100,4 @@ export default async function HomePage({
     </>
   );
 }
+
