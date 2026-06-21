@@ -32,6 +32,7 @@ export async function middleware(request: NextRequest) {
   if (!user && !isAuthRoute && !isPublicAsset) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
+    redirectUrl.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
