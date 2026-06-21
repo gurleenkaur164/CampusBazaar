@@ -26,8 +26,9 @@ export default function LoginForm() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        // carry "next" through so the callback route knows where to send them back
-        emailRedirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        // stays static so it always matches your Supabase Redirect URLs whitelist exactly —
+        // where to send the user afterward is tracked via cookie, not this URL
+        emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
 
