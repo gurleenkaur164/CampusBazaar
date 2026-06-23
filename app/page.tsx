@@ -2,7 +2,18 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ListingCard from "@/components/ListingCard";
+import { getOrCreateProfile } from "@/lib/getOrCreateProfile";
 import type { Listing } from "@/lib/types";
+
+const categories = [
+  { label: "All", emoji: "" },
+  { label: "Books", emoji: "" },
+  { label: "Furniture", emoji: "" },
+  { label: "Electronics", emoji: "" },
+  { label: "Clothing", emoji: "" },
+  { label: "Rides", emoji: "" },
+  { label: "Tickets", emoji: "" },
+];
 
 export default async function HomePage({
   searchParams,
@@ -16,11 +27,7 @@ export default async function HomePage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  const profile = await getOrCreateProfile(supabase, user.id, user.email);
 
   let query = supabase
     .from("listings")
@@ -28,68 +35,81 @@ export default async function HomePage({
     .eq("status", "available")
     .order("created_at", { ascending: false });
 
-  if (searchParams.category && searchParams.category !== "All") {
-    query = query.eq("category", searchParams.category);
-  }
-  if (searchParams.q) {
-    query = query.ilike("title", `%${searchParams.q}%`);
-  }
+  const activeCategory = searchParams.category ?? "All";
+  if (activeCategory !== "All") query = query.eq("category", activeCategory);
+  if (searchParams.q) query = query.ilike("title", `%${searchParams.q}%`);
 
   const { data: listings } = await query;
-
-  const categories = ["All", "Books", "Furniture", "Electronics", "Clothing", "Rides", "Tickets"];
 
   return (
     <>
       <Navbar profile={profile!} />
 
-      <section className="pt-9 pb-4 px-8 text-center">
-        <h1 className="font-display text-4xl text-grape mb-1.5">Find your campus steal 💸</h1>
-        <p className="text-grapeLight font-medium mb-5">Buy & sell with people who actually go here</p>
+      <section className="pt-10 pb-5 px-5 text-center">
+        <span className="inline-block bg-peri/25 text-grape text-xs font-semibold px-3 py-1 rounded-full border border-peri/40 mb-3">
+          🎓 Students only · verified by campus email
+        </span>
+        <h1 className="font-display text-3xl sm:text-[2.6rem] leading-tight text-grape mb-1.5">
+          Find your campus steal 
+        </h1>
+        <p className="text-grapeLight font-medium mb-6">Buy &amp; sell with people who actually go here</p>
 
-        <form action="/" className="max-w-xl mx-auto flex gap-2.5">
+        <form action="/" method="get" className="max-w-xl mx-auto flex gap-2.5">
+          {activeCategory !== "All" && <input type="hidden" name="category" value={activeCategory} />}
           <input
             type="text"
             name="q"
             defaultValue={searchParams.q}
-            placeholder="Search for textbooks, fridges, bikes..."
-            className="flex-1 px-4.5 py-3 rounded-2xl border-2 border-ink outline-none bg-white text-sm"
+            placeholder="Search textbooks, fridges, bikes…"
+            className="flex-1 px-[18px] py-3 rounded-2xl border-2 border-ink outline-none bg-white text-sm focus:shadow-btn transition-shadow"
           />
-          <button className="bg-coral text-white border-2 border-ink px-5 py-3 rounded-2xl font-semibold text-sm shadow-btn">
+          <button className="bg-coral text-white border-2 border-ink px-5 py-3 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-transform">
             Search
           </button>
         </form>
 
-        <div className="flex gap-2.5 justify-center flex-wrap mt-5">
-          {categories.map((c) => (
-            <a
-              key={c}
-              href={c === "All" ? "/" : `/?category=${c}`}
-              className={`px-4 py-2 rounded-full text-[13px] font-semibold border-2 ${
-                (searchParams.category ?? "All") === c
-                  ? "bg-mint border-ink"
-                  : "bg-white border-line text-grape"
-              }`}
-            >
-              {c}
-            </a>
-          ))}
+        <div className="flex gap-2 justify-center flex-wrap mt-5">
+          {categories.map((c) => {
+            const active = activeCategory === c.label;
+            const href =
+              c.label === "All"
+                ? "/"
+                : `/?category=${encodeURIComponent(c.label)}`;
+            return (
+              <a
+                key={c.label}
+                href={href}
+                className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold border-2 transition-colors ${
+                  active ? "bg-mint border-ink shadow-pill" : "bg-white border-line text-grape hover:border-ink"
+                }`}
+              >
+                <span className="mr-1">{c.emoji}</span>
+                {c.label}
+              </a>
+            );
+          })}
         </div>
       </section>
 
-      <div className="flex justify-between items-center max-w-6xl mx-auto px-8 pt-7 pb-2">
-        <h2 className="font-display text-xl text-grape">Fresh on campus 🔥</h2>
-        <span className="text-[13px] text-grapeLight">{listings?.length ?? 0} items</span>
+      <div className="flex justify-between items-end max-w-6xl mx-auto px-5 sm:px-8 pt-6 pb-3">
+        <h2 className="font-display text-xl text-grape">
+          {searchParams.q ? `Results for "${searchParams.q}"` : "Fresh on the campus market"}
+        </h2>
+        <span className="text-[13px] text-grapeLight font-medium">{listings?.length ?? 0} items</span>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-6 max-w-6xl mx-auto px-8 pb-12">
+      <div className="stagger grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 sm:gap-6 max-w-6xl mx-auto px-5 sm:px-8 pb-16">
         {listings?.map((listing: Listing, i: number) => (
           <ListingCard key={listing.id} listing={listing} index={i} />
         ))}
         {listings?.length === 0 && (
-          <p className="col-span-full text-center text-grapeLight py-12">
-            Nothing here yet. Be the first to list something! ✨
-          </p>
+          <div className="col-span-full text-center py-16">
+            <div className="text-6xl mb-3 animate-floatY"></div>
+            <p className="font-display text-lg text-grape mb-1">Nothing here yet</p>
+            <p className="text-sm text-grapeLight">
+              Be the first to list something — tap <b>+ Sell</b> up top.
+            </p>
+          </div>
         )}
       </div>
     </>

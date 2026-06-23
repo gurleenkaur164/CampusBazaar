@@ -2,27 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
+:root {
+  --font-display: "Baloo 2", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-data: "Space Grotesk", monospace;
+}
 
 body {
+  /* layered mesh-gradient "bulletin board" backdrop */
   background:
-    radial-gradient(circle at 10% 10%, #fbe7ff 0%, transparent 35%),
-    radial-gradient(circle at 90% 20%, #e0fff6 0%, transparent 35%),
-    #f3e8ff;
-  color: #3b1f5c;
-  font-family: "Poppins", sans-serif;
+    radial-gradient(circle at 8% 12%, #FCE3FF 0%, transparent 38%),
+    radial-gradient(circle at 92% 8%, #DBFFF3 0%, transparent 40%),
+    radial-gradient(circle at 78% 88%, #FFF1CF 0%, transparent 42%),
+    #F4EEFF;
+  background-attachment: fixed;
+  color: #2E1A47;
+  font-family: var(--font-body), "Plus Jakarta Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.font-display {
-  font-family: "Baloo 2", sans-serif;
+.font-display { font-family: var(--font-display), "Baloo 2", sans-serif; }
+.font-data { font-family: var(--font-data), "Space Grotesk", monospace; }
+
+/* ---- Signature: sticker cards pinned to a board ---- */
+.sticker-card { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease; }
+.sticker-card:nth-child(3n+1) { transform: rotate(-1.4deg); }
+.sticker-card:nth-child(3n+2) { transform: rotate(1deg); }
+.sticker-card:nth-child(3n+3) { transform: rotate(-0.4deg); }
+.sticker-card:hover { transform: rotate(0deg) translateY(-6px) scale(1.015); }
+
+/* washi-tape strip used to "pin" cards */
+.tape {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 78px;
+  height: 22px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: repeating-linear-gradient(
+    45deg, rgba(255,214,107,0.85) 0 7px, rgba(255,228,150,0.85) 7px 14px
+  );
+  border: 1.5px solid rgba(46,26,71,0.25);
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(46,26,71,0.12);
 }
 
-.sticker-card:nth-child(odd) {
-  transform: rotate(-1.2deg);
+/* price-tag motif */
+.price-tag::before {
+  content: "";
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #FFFBF5;
+  border: 2px solid currentColor;
+  vertical-align: middle;
 }
-.sticker-card:nth-child(even) {
-  transform: rotate(1.2deg);
+
+/* skeleton shimmer */
+.skeleton { position: relative; overflow: hidden; background: #EDE3FB; }
+.skeleton::after {
+  content: ""; position: absolute; inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 1.4s infinite;
 }
-.sticker-card:hover {
-  transform: rotate(0deg) translateY(-4px);
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* tidy scrollbars inside chat / panels */
+.nice-scroll::-webkit-scrollbar { width: 8px; }
+.nice-scroll::-webkit-scrollbar-thumb { background: #D9C7F5; border-radius: 99px; }
+.nice-scroll::-webkit-scrollbar-track { background: transparent; }
+
+/* stagger helper for grids */
+.stagger > * { animation: fadeUp 0.5s ease both; }
+@keyframes fadeUp { 0% { transform: translateY(14px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+/* press feedback for chunky buttons */
+.btn-press:active { transform: translate(2px, 2px); box-shadow: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .sticker-card { transform: none !important; }
+}
+
+*:focus-visible {
+  outline: 3px solid #A78BFA;
+  outline-offset: 2px;
+  border-radius: 6px;
 }

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import ChatWindow from "@/components/ChatWindow";
 import { getOrCreateProfile } from "@/lib/getOrCreateProfile";
@@ -22,8 +23,12 @@ export default async function ChatPage({ params }: { params: { requestId: string
 
   if (!request) notFound();
 
-  const otherUser =
-    request.buyer_id === user.id ? request.listings.profiles : request.buyer;
+  // Only the buyer or the listing's seller may open this chat.
+  const sellerId = request.listings?.seller_id;
+  const isParticipant = user.id === request.buyer_id || user.id === sellerId;
+  if (!isParticipant) notFound();
+
+  const otherUser = request.buyer_id === user.id ? request.listings.profiles : request.buyer;
 
   const { data: messages } = await supabase
     .from("messages")
@@ -34,6 +39,11 @@ export default async function ChatPage({ params }: { params: { requestId: string
   return (
     <>
       <Navbar profile={profile!} />
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-4">
+        <Link href="/inbox" className="text-sm text-grapeLight hover:text-grape font-medium">
+          ← All messages
+        </Link>
+      </div>
       <ChatWindow
         requestId={params.requestId}
         currentUserId={user.id}
