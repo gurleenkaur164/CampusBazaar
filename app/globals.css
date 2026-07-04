@@ -81,9 +81,199 @@ body {
 /* press feedback for chunky buttons */
 .btn-press:active { transform: translate(2px, 2px); box-shadow: none !important; }
 
+/* ======================================================
+   NEW: Smooth page transitions
+   ====================================================== */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-transition {
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ======================================================
+   NEW: Glassmorphism utility
+   ====================================================== */
+.glass {
+  background: rgba(255, 251, 245, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* ======================================================
+   NEW: Nav progress bar
+   ====================================================== */
+.nav-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #FF5C8A, #A78BFA, #5BE9C2);
+  border-radius: 0 3px 3px 0;
+  z-index: 9999;
+  animation: progressPulse 1.2s ease-in-out infinite;
+}
+@keyframes progressPulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ======================================================
+   NEW: Floating label input
+   ====================================================== */
+.floating-label-group { position: relative; }
+.floating-label-group input {
+  width: 100%;
+  padding: 22px 18px 8px 18px;
+  border: 2.5px solid #2E1A47;
+  border-radius: 16px;
+  background: #FFFBF5;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--font-body);
+  color: #2E1A47;
+}
+.floating-label-group input:focus {
+  border-color: #A78BFA;
+  box-shadow: 3px 3px 0px #A78BFA;
+}
+.floating-label-group label {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #8A6FB0;
+  pointer-events: none;
+  transition: top 0.2s, font-size 0.2s, color 0.2s;
+  font-family: var(--font-body);
+}
+.floating-label-group input:focus + label,
+.floating-label-group input:not(:placeholder-shown) + label {
+  top: 10px;
+  font-size: 11px;
+  color: #A78BFA;
+  font-weight: 600;
+}
+
+/* ======================================================
+   NEW: Auth modal backdrop
+   ====================================================== */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(46, 26, 71, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  animation: backdropIn 0.25s ease;
+}
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-sheet {
+  animation: sheetUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes sheetUp {
+  from { transform: translateY(60px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ======================================================
+   NEW: Hero text gradient animation
+   ====================================================== */
+.hero-gradient-text {
+  background: linear-gradient(135deg, #3D2167 0%, #FF5C8A 45%, #A78BFA 80%, #5BE9C2 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ======================================================
+   NEW: Pulse badge for live indicator
+   ====================================================== */
+.pulse-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: #5BE9C2;
+  border-radius: 50%;
+  position: relative;
+}
+.pulse-dot::after {
+  content: "";
+  position: absolute; inset: -3px;
+  border-radius: 50%;
+  border: 2px solid #5BE9C2;
+  animation: pulsering 1.5s ease-out infinite;
+}
+@keyframes pulsering {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* ======================================================
+   NEW: Wishlist heart button
+   ====================================================== */
+.heart-btn {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.heart-btn:hover  { transform: scale(1.2); }
+.heart-btn:active { transform: scale(0.9); }
+.heart-btn.hearted { color: #FF5C8A; }
+
+/* ======================================================
+   NEW: FAB (Floating Action Button)
+   ====================================================== */
+.fab {
+  position: fixed;
+  bottom: 28px; right: 24px;
+  z-index: 100;
+  animation: fabIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+}
+@keyframes fabIn {
+  from { transform: scale(0) rotate(-90deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ======================================================
+   NEW: Category pill sliding active indicator
+   ====================================================== */
+.category-pill {
+  position: relative;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.category-pill.active {
+  background: #2E1A47;
+  color: #FFFBF5;
+  border-color: #2E1A47;
+  box-shadow: 3px 3px 0px rgba(46,26,71,0.35);
+}
+
+/* ======================================================
+   NEW: Search bar expand on focus
+   ====================================================== */
+.search-bar {
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+.search-bar:focus-within {
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.35), 3px 3px 0px #A78BFA;
+  border-color: #A78BFA;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .sticker-card { transform: none !important; }
+  .hero-gradient-text { animation: none !important; background-position: 0% 50% !important; }
 }
 
 *:focus-visible {

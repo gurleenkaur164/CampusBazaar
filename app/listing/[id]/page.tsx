@@ -1,11 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import RequestButton from "@/components/RequestButton";
 import OwnerRequests from "@/components/OwnerRequests";
 import { getOrCreateProfile } from "@/lib/getOrCreateProfile";
+import GuestBuyButton from "@/components/GuestBuyButton";
+
+export const dynamic = "force-dynamic";
 
 const statusLabel: Record<string, string> = {
   available: "Available",
@@ -19,9 +22,9 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
 
-  const profile = await getOrCreateProfile(supabase, user.id, user.email);
+  // Fetch profile only for logged-in users
+  const profile = user ? await getOrCreateProfile(supabase, user.id, user.email) : null;
 
   const { data: listing } = await supabase
     .from("listings")
@@ -31,29 +34,41 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
 
   if (!listing) notFound();
 
-  const { data: existingRequest } = await supabase
-    .from("requests")
-    .select("*")
-    .eq("listing_id", listing.id)
-    .eq("buyer_id", user.id)
-    .maybeSingle();
+  const existingRequest = user
+    ? (
+        await supabase
+          .from("requests")
+          .select("*")
+          .eq("listing_id", listing.id)
+          .eq("buyer_id", user.id)
+          .maybeSingle()
+      ).data
+    : null;
 
-  const isOwner = listing.seller_id === user.id;
+  const isOwner = user ? listing.seller_id === user.id : false;
 
   return (
     <>
-      <Navbar profile={profile!} />
+      <Navbar profile={profile} />
       <div className="max-w-4xl mx-auto mt-6 sm:mt-10 px-5 sm:px-6">
-        <Link href="/" className="inline-block text-sm text-grapeLight hover:text-grape mb-3 font-medium">
-          ← Back to browse
+        <Link href="/" className="inline-flex items-center gap-1 text-sm text-grapeLight hover:text-grape mb-3 font-medium transition-colors group">
+          <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
+          Back to browse
         </Link>
 
         <div className="bg-card border-[3px] border-ink rounded-chunky shadow-chunkyHover overflow-hidden grid md:grid-cols-2 animate-fadeUp">
-          <div className="relative bg-gradient-to-br from-mint to-[#C9FFEC] flex items-center justify-center text-[100px] min-h-[260px] border-b-[3px] md:border-b-0 md:border-r-[3px] border-ink">
+          {/* Image panel */}
+          <div className="relative bg-gradient-to-br from-mint to-[#C9FFEC] flex items-center justify-center text-[100px] min-h-[260px] border-b-[3px] md:border-b-0 md:border-r-[3px] border-ink overflow-hidden group">
             {listing.image_url ? (
-              <Image src={listing.image_url} alt={listing.title} fill className="object-cover" sizes="(max-width:768px) 100vw, 50vw" />
+              <Image
+                src={listing.image_url}
+                alt={listing.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(max-width:768px) 100vw, 50vw"
+              />
             ) : (
-              <span>{listing.emoji}</span>
+              <span className="transition-transform duration-300 group-hover:scale-110">{listing.emoji}</span>
             )}
             {listing.status !== "available" && (
               <span className="absolute top-3 left-3 bg-ink text-card px-3 py-1 rounded-full text-xs font-bold border-2 border-card">
@@ -62,6 +77,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
             )}
           </div>
 
+          {/* Details panel */}
           <div className="p-6 sm:p-8">
             <span className="text-[11px] bg-mint border border-ink/20 px-2.5 py-0.5 rounded-lg font-semibold">
               {listing.category}
@@ -74,6 +90,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
               {listing.description || "No description added."}
             </p>
 
+            {/* Seller info */}
             <div className="flex items-center gap-2.5 mb-5 bg-white border-2 border-line rounded-2xl px-3.5 py-2.5">
               <div className="w-9 h-9 rounded-full bg-mint border-2 border-ink flex items-center justify-center text-sm shrink-0">
                 {listing.profiles?.avatar_emoji}
@@ -86,15 +103,21 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
               </div>
             </div>
 
-            {isOwner ? (
-              <OwnerRequests listingId={listing.id} />
+            {/* Buy / owner / guest CTA */}
+            {user ? (
+              isOwner ? (
+                <OwnerRequests listingId={listing.id} />
+              ) : (
+                <RequestButton
+                  listingId={listing.id}
+                  sellerId={listing.seller_id}
+                  existingRequest={existingRequest}
+                  soldOrReserved={listing.status !== "available"}
+                />
+              )
             ) : (
-              <RequestButton
-                listingId={listing.id}
-                sellerId={listing.seller_id}
-                existingRequest={existingRequest}
-                soldOrReserved={listing.status !== "available"}
-              />
+              /* Guest — show sign-in prompt instead of buy button */
+              <GuestBuyButton listingId={listing.id} listingTitle={listing.title} />
             )}
           </div>
         </div>

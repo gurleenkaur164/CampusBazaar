@@ -1,11 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Routes that an unauthenticated user is allowed to reach.
-// /auth/callback MUST be public — it's where the magic-link code is exchanged
-// for a session. If the middleware redirects it to /login, the `?code` is lost
-// and login can never complete.
-const PUBLIC_PREFIXES = ["/login", "/auth"];
+// Routes that require authentication.
+const PROTECTED_PATHS = ["/sell", "/post", "/inbox", "/my-listings", "/chat"];
 
 export async function middleware(request: NextRequest) {
   // A single response object is reused so that any refreshed Supabase auth
@@ -40,9 +37,9 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
+  const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
 
-  if (!user && !isPublic) {
+  if (!user && isProtected) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("next", pathname);
