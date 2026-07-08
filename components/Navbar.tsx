@@ -7,16 +7,20 @@ import { createClient } from "@/lib/supabase/client";
 import type { Notification, Profile } from "@/lib/types";
 import NotificationBell from "./NotificationBell";
 import AuthModal from "./AuthModal";
+import Toaster, { type Toast } from "./Toaster";
 
 export default function Navbar({ profile }: { profile: Profile | null }) {
   const supabase = createClient();
   const pathname = usePathname();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [toasts, setToasts] = useState<Toast[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authModal, setAuthModal] = useState<{ open: boolean; reason: string; next: string }>({
     open: false, reason: "", next: "/"
   });
+
+  const dismissToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   // Deepen navbar shadow when user scrolls
   useEffect(() => {
@@ -24,6 +28,15 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  // Politely ask for browser-notification permission once a student is signed in,
+  // so we can surface alerts even when the tab is in the background.
+  useEffect(() => {
+    if (!profile) return;
+    if (typeof Notification !== "undefined" && Notification.permission === "default") {
+      Notification.requestPermission().catch(() => {});
+    }
+  }, [profile?.id]);
 
   useEffect(() => {
     if (!profile) return;
@@ -46,7 +59,27 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
           table: "notifications",
           filter: `user_id=eq.${profile.id}`,
         },
-        (payload) => setNotifications((prev) => [payload.new as Notification, ...prev])
+        (payload) => {
+          const n = payload.new as Notification;
+          setNotifications((prev) => (prev.some((x) => x.id === n.id) ? prev : [n, ...prev]));
+
+          // In-app toast (cap the stack so it never floods the screen).
+          setToasts((prev) => [...prev, { id: n.id, message: n.message, link: n.link }].slice(-3));
+
+          // Native push when the tab isn't focused.
+          if (
+            typeof document !== "undefined" &&
+            document.visibilityState === "hidden" &&
+            typeof Notification !== "undefined" &&
+            Notification.permission === "granted"
+          ) {
+            try {
+              new Notification("Campus Bazaar", { body: n.message, tag: n.id });
+            } catch {
+              /* some browsers require a ServiceWorker; ignore gracefully */
+            }
+          }
+        }
       )
       .subscribe();
 
@@ -97,8 +130,8 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
       <nav
         className={`sticky top-0 z-50 flex items-center justify-between px-4 sm:px-8 py-3.5 transition-all duration-300 ${
           scrolled
-            ? "glass border-b-[3px] border-ink shadow-glass"
-            : "bg-card/85 backdrop-blur-md border-b-[3px] border-ink"
+            ? "glass border-b border-line shadow-glass"
+            : "bg-card/85 backdrop-blur-md border-b border-line"
         }`}
       >
         {/* Brand */}
@@ -107,7 +140,6 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
           <span className="bg-coral text-white px-2.5 py-0.5 rounded-xl -rotate-3 inline-block text-base sm:text-lg shadow-pill transition-transform hover:rotate-0 hover:scale-105 duration-200">
             Bazaar
           </span>
-          <span className="hidden xs:inline">🛍️</span>
         </Link>
 
         {/* Nav links */}
@@ -123,7 +155,7 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
               {/* Sell button */}
               <Link
                 href="/post"
-                className="bg-coral text-white border-2 border-ink px-3 sm:px-4 py-2 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-all hover:shadow-glow"
+                className="bg-coral text-white border border-line px-3 sm:px-4 py-2 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-all hover:shadow-glow"
               >
                 + Sell
               </Link>
@@ -132,7 +164,7 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen((o) => !o)}
-                  className="w-10 h-10 rounded-full bg-mint border-2 border-ink flex items-center justify-center text-sm shadow-pill btn-press transition-all hover:scale-105"
+                  className="w-10 h-10 rounded-full bg-mint border border-line flex items-center justify-center text-sm shadow-pill btn-press transition-all hover:scale-105"
                   title={profile.name}
                   aria-haspopup="menu"
                   aria-expanded={menuOpen}
@@ -142,7 +174,7 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
                 {menuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                    <div className="absolute right-0 top-12 z-50 w-56 glass border-2 border-ink rounded-2xl shadow-chunkyHover overflow-hidden animate-popIn">
+                    <div className="absolute right-0 top-12 z-50 w-56 glass border border-line rounded-2xl shadow-chunkyHover overflow-hidden animate-popIn">
                       <div className="px-4 py-3 border-b border-line/60">
                         <p className="font-semibold text-sm truncate">{profile.name}</p>
                         <p className="text-[11px] text-grapeLight">{profile.hostel ?? "On campus"}</p>
@@ -164,9 +196,9 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
             /* Guest mode — show Sign In CTA */
             <Link
               href="/login"
-              className="flex items-center gap-1.5 bg-coral text-white border-2 border-ink px-4 py-2 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-all hover:shadow-glow"
+              className="flex items-center gap-1.5 bg-coral text-white border border-line px-4 py-2 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-all hover:shadow-glow"
             >
-              Sign in ✨
+              Sign in
             </Link>
           )}
         </div>
@@ -180,6 +212,9 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
           onClose={() => setAuthModal((s) => ({ ...s, open: false }))}
         />
       )}
+
+      {/* Live notification toasts (Supabase Realtime → in-app + native push) */}
+      <Toaster toasts={toasts} onDismiss={dismissToast} />
     </>
   );
 }

@@ -47,18 +47,14 @@ export default function LoginForm() {
     <div className="min-h-screen relative flex items-center justify-center px-5 overflow-hidden">
       {/* Animated backdrop blobs */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute w-[460px] h-[460px] -top-32 -left-32 rounded-full bg-gradient-to-br from-mint to-transparent opacity-60 blur-3xl animate-floatY" />
-        <div className="absolute w-[380px] h-[380px] top-1/3 -right-24 rounded-full bg-gradient-to-br from-coral to-transparent opacity-50 blur-3xl animate-floatY [animation-duration:9s]" />
-        <div className="absolute w-[320px] h-[320px] bottom-0 left-1/4 rounded-full bg-gradient-to-br from-peri to-transparent opacity-40 blur-3xl animate-floatY [animation-duration:11s]" />
-        <span className="absolute text-5xl top-[12%] left-[16%] opacity-70 animate-floatY select-none" aria-hidden>📚</span>
-        <span className="absolute text-4xl top-[70%] left-[12%] opacity-60 animate-floatY [animation-duration:7s] select-none" aria-hidden>🛹</span>
-        <span className="absolute text-5xl top-[20%] right-[14%] opacity-70 animate-floatY [animation-duration:8s] select-none" aria-hidden>🎧</span>
-        <span className="absolute text-4xl bottom-[16%] right-[20%] opacity-60 animate-floatY [animation-duration:10s] select-none" aria-hidden>🪴</span>
+        <div className="absolute w-[460px] h-[460px] -top-40 -left-40 rounded-full bg-gradient-to-br from-mint to-transparent opacity-20 blur-3xl animate-floatY" />
+        <div className="absolute w-[380px] h-[380px] top-1/3 -right-32 rounded-full bg-gradient-to-br from-coral to-transparent opacity-[0.14] blur-3xl animate-floatY [animation-duration:9s]" />
+        <div className="absolute w-[320px] h-[320px] -bottom-24 left-1/4 rounded-full bg-gradient-to-br from-peri to-transparent opacity-[0.12] blur-3xl animate-floatY [animation-duration:11s]" />
       </div>
 
       <div
-        className="relative bg-card border-[3px] border-ink rounded-chunky p-9 sm:p-12 max-w-md w-full text-center animate-popIn"
-        style={{ boxShadow: "12px 16px 0px rgba(46,26,71,0.18), 0 30px 60px -20px rgba(46,26,71,0.35)" }}
+        className="relative bg-card border border-line rounded-chunky p-9 sm:p-12 max-w-md w-full text-center animate-popIn"
+        style={{ boxShadow: "0 10px 24px -8px rgba(36,27,51,0.16), 0 30px 60px -24px rgba(36,27,51,0.28)" }}
       >
         {/* Back to browse link */}
         <Link
@@ -76,12 +72,11 @@ export default function LoginForm() {
           Campus
           <span className="bg-coral text-white px-2.5 py-0.5 rounded-xl ml-1.5 -rotate-2 inline-block shadow-pill">
             Bazaar
-          </span>{" "}
-          🛍️
+          </span>
         </h1>
         <p className="text-grapeLight text-sm mb-8">
           {next === "/post"
-            ? "Sign in to list an item for sale 🏷️"
+            ? "Sign in to list an item for sale"
             : next !== "/"
             ? `Sign in to continue → ${next}`
             : "Sign in with your campus email to get started"}
@@ -90,7 +85,6 @@ export default function LoginForm() {
         {sent ? (
           /* Success state */
           <div className="animate-popIn">
-            <div className="text-6xl mb-4 animate-floatY">📬</div>
             <div className="text-sm bg-mint/40 border-2 border-mintDark rounded-2xl p-5 mb-4">
               <p className="font-semibold text-grape mb-1">Magic link sent!</p>
               Check your inbox — we sent a link to{" "}
@@ -121,7 +115,7 @@ export default function LoginForm() {
 
             {error && (
               <p className="text-coralDark text-xs font-medium bg-coral/10 border border-coral/30 rounded-xl px-4 py-2 animate-slideRight">
-                ⚠️ {error}
+                {error}
               </p>
             )}
 
@@ -129,7 +123,7 @@ export default function LoginForm() {
               id="login-submit"
               type="submit"
               disabled={loading}
-              className="w-full relative overflow-hidden bg-coral text-white border-2 border-ink py-3.5 rounded-2xl font-semibold shadow-btn btn-press transition-all disabled:opacity-60 disabled:cursor-not-allowed group"
+              className="w-full relative overflow-hidden bg-coral text-white border border-line py-3.5 rounded-2xl font-semibold shadow-btn btn-press transition-all disabled:opacity-60 disabled:cursor-not-allowed group"
             >
               {/* Shimmer on hover */}
               <span className="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:translate-x-[100%] transition-transform duration-500" />
@@ -141,14 +135,14 @@ export default function LoginForm() {
                   Sending…
                 </span>
               ) : (
-                "Send magic link ✨"
+                "Send magic link"
               )}
             </button>
           </form>
         )}
 
         <p className="text-[11px] text-grapeLight mt-6">
-          🔒 No passwords. We only verify you actually go here.
+          No passwords. We only verify you actually go here.
         </p>
       </div>
     </div>

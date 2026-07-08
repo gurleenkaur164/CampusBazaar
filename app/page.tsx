@@ -69,7 +69,7 @@ export default async function HomePage({
       <section className={`px-5 ${!user ? "pt-0 pb-5" : "pb-5"}`}>
         <form action="/" method="get" className="max-w-xl mx-auto">
           {activeCategory !== "All" && <input type="hidden" name="category" value={activeCategory} />}
-          <div className="search-bar flex gap-2.5 border-2 border-ink rounded-2xl bg-white overflow-hidden pr-2 py-2 pl-4">
+          <div className="search-bar flex gap-2.5 border border-line rounded-2xl bg-white overflow-hidden pr-2 py-2 pl-4">
             <input
               type="text"
               name="q"
@@ -77,7 +77,7 @@ export default async function HomePage({
               placeholder="Search textbooks, fridges, bikes…"
               className="flex-1 outline-none bg-transparent text-sm text-grape placeholder:text-grapeLight"
             />
-            <button className="bg-coral text-white border-2 border-ink px-4 py-2 rounded-xl font-semibold text-sm shadow-btn btn-press transition-transform shrink-0">
+            <button className="bg-coral text-white border border-line px-4 py-2 rounded-xl font-semibold text-sm shadow-btn btn-press transition-transform shrink-0">
               Search
             </button>
           </div>
@@ -128,7 +128,6 @@ export default async function HomePage({
         ))}
         {listings?.length === 0 && (
           <div className="col-span-full text-center py-16">
-            <div className="text-6xl mb-3 animate-floatY">📭</div>
             <p className="font-display text-lg text-grape mb-1">Nothing here yet</p>
             <p className="text-sm text-grapeLight">
               Be the first to list something — {user ? <><b>tap + Sell</b> up top</> : <>sign in and hit <b>+ Sell</b></>}.
@@ -141,7 +140,7 @@ export default async function HomePage({
       {user && (
         <Link
           href="/post"
-          className="fab bg-coral text-white border-[3px] border-ink w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold shadow-fab btn-press transition-all hover:scale-110 hover:shadow-glow"
+          className="fab bg-coral text-white border border-line w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold shadow-fab btn-press transition-all hover:scale-110 hover:shadow-glow"
           title="List something"
           aria-label="List a new item"
         >

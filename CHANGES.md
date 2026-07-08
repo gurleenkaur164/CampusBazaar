@@ -52,6 +52,33 @@ Kept the existing "chunky sticker" identity but tightened it into a cohesive sys
 - Tightened pastel palette, glassy sticky navbar, skeletons, friendly empty states, status
   badges, profile menu, mobile-friendly grid, focus-visible rings, and reduced-motion support.
 
+## 🧭 Production pass — refined design + live notifications
+
+### Design: from "sticker board" to a refined campus marketplace
+The playful identity stayed, but the busy, AI-looking scaffolding came off:
+- **Dropped the gimmicks** — washi-tape strips, random per-card rotation, and the
+  price-tag dot that read as a stray "o".
+- **Depth over outlines** — hard 3 px black borders + offset shadows became a single
+  hairline + soft, layered shadows. Buttons press with a subtle settle, not a hard shift.
+- **Calmer palette** — the neon lavender/mint/coral mesh is now warm paper with one
+  confident coral accent and a restrained mint support; headings tuned for hierarchy.
+- **Quieter heroes** — fewer, softer floating props and much lower-opacity backdrop
+  glows on the landing and login pages.
+
+### Real-time notifications (Supabase Realtime = WebSocket)
+- New **toast** stack: notifications now pop in-app the instant they arrive over the
+  websocket, de-duplicated against the bell, auto-dismissing and tappable.
+- **Native browser push** when the tab is backgrounded (permission requested politely
+  after sign-in), so students don't miss a message or accepted request.
+
+### Correctness & production polish
+- Declined-request notifications used the wrong `type` (`request_accepted`) — fixed to
+  `request_declined`, with the type union updated to match.
+- Added a global **error boundary** (`app/error.tsx`) with a friendly recover/return UI.
+- Per-listing **metadata / Open Graph** so shared listing links preview with title,
+  price, and photo.
+- Re-verified with a clean `next build` — all routes compile and types pass.
+
 ## Setup
 Copy `.env.example` to `.env.local`, fill in your Supabase values, run `supabase/schema.sql`,
 then `npm install && npm run dev`.

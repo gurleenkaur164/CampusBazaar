@@ -5,21 +5,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Surfaces
-        bg: "#F4EEFF",        // lavender mist backdrop
-        card: "#FFFBF5",      // warm cream surface
+        // Surfaces — warm, quiet paper rather than a neon lavender wash
+        bg: "#F6F2EC",        // warm off-white backdrop
+        card: "#FFFFFF",      // clean surface
         // Ink + lines
-        ink: "#2E1A47",       // deep grape — text & chunky borders
-        line: "#E7DBFB",      // hairline / muted border
-        // Brand pops
-        coral: "#FF5C8A",
-        coralDark: "#E03D72",
-        mint: "#5BE9C2",
-        mintDark: "#27C7A0",
-        grape: "#3D2167",
-        grapeLight: "#8A6FB0",
-        butter: "#FFD66B",
-        peri: "#A78BFA",
+        ink: "#241B33",       // ink for text & outlines (kept soft-black grape)
+        line: "#ECE6DD",      // hairline / muted border
+        // Brand — one confident accent (coral) with a restrained mint support
+        coral: "#F0517C",     // slightly deeper, less candy than #FF5C8A
+        coralDark: "#D43C68",
+        mint: "#37D3AE",
+        mintDark: "#1FB897",
+        grape: "#2E2440",     // headings / primary text
+        grapeLight: "#8C8398", // muted / secondary text
+        butter: "#F5C451",
+        peri: "#8B7BE8",
       },
       fontFamily: {
         display: ["var(--font-display)", "Baloo 2", "sans-serif"],
@@ -30,13 +30,14 @@ const config: Config = {
         "4.5": "1.125rem",
       },
       boxShadow: {
-        chunky: "5px 6px 0px rgba(46,26,71,0.14)",
-        chunkyHover: "8px 10px 0px rgba(46,26,71,0.20)",
-        btn: "3px 3px 0px #2E1A47",
-        pill: "2px 2px 0px #2E1A47",
-        glow: "0 18px 40px -16px rgba(255,92,138,0.45)",
-        glass: "0 8px 32px rgba(46,26,71,0.12), inset 0 0 0 1px rgba(255,255,255,0.4)",
-        fab: "4px 6px 0px rgba(46,26,71,0.25), 0 16px 40px rgba(255,92,138,0.3)",
+        // Soft, layered depth instead of hard neobrutalist offsets
+        chunky: "0 2px 4px -2px rgba(36,27,51,0.10), 0 8px 22px -12px rgba(36,27,51,0.22)",
+        chunkyHover: "0 6px 12px -6px rgba(36,27,51,0.14), 0 20px 40px -16px rgba(36,27,51,0.28)",
+        btn: "0 1px 2px rgba(36,27,51,0.10), 0 6px 16px -8px rgba(36,27,51,0.30)",
+        pill: "0 1px 2px rgba(36,27,51,0.08), 0 4px 12px -6px rgba(36,27,51,0.22)",
+        glow: "0 14px 34px -14px rgba(240,81,124,0.55)",
+        glass: "0 8px 32px rgba(36,27,51,0.10), inset 0 0 0 1px rgba(255,255,255,0.5)",
+        fab: "0 8px 20px -6px rgba(240,81,124,0.45), 0 3px 8px -2px rgba(36,27,51,0.25)",
       },
       borderRadius: {
         chunky: "22px",

@@ -46,7 +46,7 @@ export default function AuthModal({
     >
       <div
         ref={modalRef}
-        className="modal-sheet w-full max-w-sm bg-card border-[3px] border-ink rounded-chunky p-7 text-center relative"
+        className="modal-sheet w-full max-w-sm bg-card border border-line rounded-chunky p-7 text-center relative"
         style={{ boxShadow: "8px 10px 0px rgba(46,26,71,0.18), 0 30px 60px -20px rgba(46,26,71,0.4)" }}
       >
         {/* Close button */}
@@ -59,9 +59,6 @@ export default function AuthModal({
             <path d="M1 1l12 12M13 1L1 13" />
           </svg>
         </button>
-
-        {/* Icon */}
-        <div className="text-5xl mb-3 animate-floatY">🔐</div>
 
         {/* Brand */}
         <h2 className="font-display text-2xl text-grape mb-1">
@@ -77,16 +74,12 @@ export default function AuthModal({
 
         {/* Features chips */}
         <div className="flex flex-wrap gap-2 justify-center mb-6">
-          {[
-            { icon: "🎓", label: "Verified students only" },
-            { icon: "💬", label: "Real-time chat" },
-            { icon: "🔒", label: "Magic link login" },
-          ].map((f) => (
+          {["Verified students only", "Real-time chat", "Magic link login"].map((label) => (
             <span
-              key={f.label}
+              key={label}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-peri/15 border border-peri/30 rounded-full text-[12px] font-semibold text-grape"
             >
-              {f.icon} {f.label}
+              {label}
             </span>
           ))}
         </div>
@@ -94,9 +87,9 @@ export default function AuthModal({
         {/* CTA */}
         <Link
           href={`/login?next=${encodeURIComponent(nextPath)}`}
-          className="block w-full bg-coral text-white border-2 border-ink py-3.5 rounded-2xl font-semibold shadow-btn btn-press transition-transform text-center"
+          className="block w-full bg-coral text-white border border-line py-3.5 rounded-2xl font-semibold shadow-btn btn-press transition-transform text-center"
         >
-          Sign in with campus email ✨
+          Sign in with campus email
         </Link>
 
         <p className="text-[11px] text-grapeLight mt-4">

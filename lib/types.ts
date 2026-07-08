@@ -42,7 +42,7 @@ export type Message = {
 export type Notification = {
   id: string;
   user_id: string;
-  type: "new_request" | "request_accepted" | "new_message";
+  type: "new_request" | "request_accepted" | "request_declined" | "new_message";
   message: string;
   link: string | null;
   is_read: boolean;

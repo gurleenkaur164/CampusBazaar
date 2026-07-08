@@ -45,10 +45,10 @@ export default function MyListingItem({ listing }: { listing: Listing }) {
   if (deleted) return null;
 
   return (
-    <div className="flex items-center gap-3 bg-card border-2 border-ink rounded-2xl shadow-chunky p-3">
+    <div className="flex items-center gap-3 bg-card border border-line rounded-2xl shadow-chunky p-3">
       <Link
         href={`/listing/${listing.id}`}
-        className="relative w-14 h-14 rounded-xl border-2 border-ink overflow-hidden flex items-center justify-center text-2xl bg-line shrink-0"
+        className="relative w-14 h-14 rounded-xl border border-line overflow-hidden flex items-center justify-center text-2xl bg-line shrink-0"
       >
         {listing.image_url ? (
           <Image src={listing.image_url} alt={listing.title} fill className="object-cover" sizes="56px" />
@@ -70,7 +70,7 @@ export default function MyListingItem({ listing }: { listing: Listing }) {
           <button
             onClick={markSold}
             disabled={busy}
-            className="text-[11px] font-semibold bg-white border-2 border-line px-2.5 py-1 rounded-lg hover:border-ink disabled:opacity-50"
+            className="text-[11px] font-semibold bg-white border border-line px-2.5 py-1 rounded-lg hover:border-ink disabled:opacity-50"
           >
             Mark sold
           </button>
@@ -78,7 +78,7 @@ export default function MyListingItem({ listing }: { listing: Listing }) {
           <button
             onClick={relist}
             disabled={busy}
-            className="text-[11px] font-semibold bg-mint border-2 border-ink px-2.5 py-1 rounded-lg disabled:opacity-50"
+            className="text-[11px] font-semibold bg-mint border border-line px-2.5 py-1 rounded-lg disabled:opacity-50"
           >
             Relist
           </button>

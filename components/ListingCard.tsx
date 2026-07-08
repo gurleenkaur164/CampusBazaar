@@ -48,13 +48,11 @@ export default function ListingCard({ listing, index, isLoggedIn = false }: List
       <Link
         href={`/listing/${listing.id}`}
         style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
-        className="sticker-card relative block bg-card border-[2.5px] border-ink rounded-chunky overflow-hidden shadow-chunky hover:shadow-chunkyHover group"
+        className="sticker-card relative block bg-card border border-line hover:border-line rounded-chunky overflow-hidden shadow-chunky hover:shadow-chunkyHover group"
       >
-        <span className="tape" aria-hidden />
-
         {/* Image / placeholder */}
         <div
-          className="relative h-[160px] flex items-center justify-center text-5xl border-b-[2.5px] border-ink overflow-hidden"
+          className="relative h-[168px] flex items-center justify-center text-5xl border-b border-line overflow-hidden"
           style={listing.image_url ? undefined : { background: placeholderBgs[index % placeholderBgs.length] }}
         >
           {listing.image_url ? (
@@ -74,7 +72,7 @@ export default function ListingCard({ listing, index, isLoggedIn = false }: List
           {/* Status badge */}
           {badge && (
             <span
-              className={`absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border-2 border-ink ${badge.cls}`}
+              className={`absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm ${badge.cls}`}
             >
               {badge.label}
             </span>
@@ -84,7 +82,7 @@ export default function ListingCard({ listing, index, isLoggedIn = false }: List
           <button
             onClick={handleHeart}
             aria-label={hearted ? "Remove from wishlist" : "Add to wishlist"}
-            className={`absolute top-2.5 left-2.5 w-8 h-8 rounded-full bg-white/90 border-2 border-ink flex items-center justify-center heart-btn ${
+            className={`absolute top-2.5 left-2.5 w-8 h-8 rounded-full bg-white/95 shadow-sm flex items-center justify-center heart-btn ${
               hearted ? "hearted" : "text-grapeLight"
             } ${heartAnimating ? "animate-heartPop" : ""} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
           >
@@ -114,7 +112,7 @@ export default function ListingCard({ listing, index, isLoggedIn = false }: List
             ₹{listing.price.toLocaleString("en-IN")}
           </p>
           <div className="flex justify-between items-center mt-2.5">
-            <span className="text-[11px] bg-mint border border-ink/20 px-2.5 py-0.5 rounded-lg font-semibold">
+            <span className="text-[11px] bg-mint/15 text-mintDark border border-mint/30 px-2.5 py-0.5 rounded-lg font-semibold">
               {listing.category}
             </span>
             <span className="text-[11px] text-grapeLight font-medium truncate max-w-[90px]">
@@ -126,7 +124,7 @@ export default function ListingCard({ listing, index, isLoggedIn = false }: List
 
       {showAuth && (
         <AuthModal
-          reason="Sign in to save items to your wishlist 💜"
+          reason="Sign in to save items to your wishlist "
           nextPath="/"
           onClose={() => setShowAuth(false)}
         />

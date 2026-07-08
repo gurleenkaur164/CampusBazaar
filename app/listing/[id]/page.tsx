@@ -10,6 +10,29 @@ import GuestBuyButton from "@/components/GuestBuyButton";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const supabase = createClient();
+  const { data: listing } = await supabase
+    .from("listings")
+    .select("title, description, price, image_url")
+    .eq("id", params.id)
+    .single();
+
+  if (!listing) return { title: "Listing not found · Campus Bazaar" };
+
+  const title = `${listing.title} · ₹${Number(listing.price).toLocaleString("en-IN")} — Campus Bazaar`;
+  const description = listing.description || "Snag this from a fellow student on Campus Bazaar.";
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: listing.image_url ? [{ url: listing.image_url }] : undefined,
+    },
+  };
+}
+
 const statusLabel: Record<string, string> = {
   available: "Available",
   pending: "Reserved",
@@ -56,9 +79,9 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           Back to browse
         </Link>
 
-        <div className="bg-card border-[3px] border-ink rounded-chunky shadow-chunkyHover overflow-hidden grid md:grid-cols-2 animate-fadeUp">
+        <div className="bg-card border border-line rounded-chunky shadow-chunkyHover overflow-hidden grid md:grid-cols-2 animate-fadeUp">
           {/* Image panel */}
-          <div className="relative bg-gradient-to-br from-mint to-[#C9FFEC] flex items-center justify-center text-[100px] min-h-[260px] border-b-[3px] md:border-b-0 md:border-r-[3px] border-ink overflow-hidden group">
+          <div className="relative bg-gradient-to-br from-mint to-[#C9FFEC] flex items-center justify-center text-[100px] min-h-[260px] border-b-[3px] md:border-b-0 md:border-r border-line overflow-hidden group">
             {listing.image_url ? (
               <Image
                 src={listing.image_url}
@@ -91,14 +114,19 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
             </p>
 
             {/* Seller info */}
-            <div className="flex items-center gap-2.5 mb-5 bg-white border-2 border-line rounded-2xl px-3.5 py-2.5">
-              <div className="w-9 h-9 rounded-full bg-mint border-2 border-ink flex items-center justify-center text-sm shrink-0">
+            <div className="flex items-center gap-2.5 mb-5 bg-white border border-line rounded-2xl px-3.5 py-2.5">
+              <div className="w-9 h-9 rounded-full bg-mint border border-line flex items-center justify-center text-sm shrink-0">
                 {listing.profiles?.avatar_emoji}
               </div>
               <div className="min-w-0">
                 <p className="font-semibold text-[13px] truncate">{listing.profiles?.name}</p>
-                <p className="text-[11px] text-grapeLight">
-                  {listing.profiles?.hostel ?? "On campus"} · ⭐ {listing.profiles?.rating ?? "New"}
+                <p className="text-[11px] text-grapeLight inline-flex items-center gap-1">
+                  {listing.profiles?.hostel ?? "On campus"}
+                  <span aria-hidden>·</span>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="text-butter">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                  {listing.profiles?.rating ?? "New"}
                 </p>
               </div>
             </div>

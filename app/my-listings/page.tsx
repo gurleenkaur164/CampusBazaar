@@ -31,18 +31,17 @@ export default async function MyListingsPage() {
       <Navbar profile={profile!} />
       <div className="max-w-2xl mx-auto px-5 sm:px-6 mt-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-2xl text-grape">My stuff 🏷️</h1>
+          <h1 className="font-display text-2xl text-grape">My stuff</h1>
           <Link
             href="/post"
-            className="bg-coral text-white border-2 border-ink px-4 py-2 rounded-2xl font-semibold text-sm shadow-btn btn-press"
+            className="bg-coral text-white border border-line px-4 py-2 rounded-2xl font-semibold text-sm shadow-btn btn-press"
           >
             + Sell
           </Link>
         </div>
 
         {items.length === 0 ? (
-          <div className="bg-card border-[3px] border-ink rounded-chunky shadow-chunky p-10 text-center">
-            <div className="text-5xl mb-3 animate-floatY">🪄</div>
+          <div className="bg-card border border-line rounded-chunky shadow-chunky p-10 text-center">
             <p className="font-display text-lg text-grape mb-1">You haven't listed anything yet</p>
             <p className="text-sm text-grapeLight">Turn that clutter into campus cash — tap + Sell.</p>
           </div>

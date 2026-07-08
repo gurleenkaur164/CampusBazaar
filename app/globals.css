@@ -9,58 +9,32 @@
 }
 
 body {
-  /* layered mesh-gradient "bulletin board" backdrop */
+  /* quiet, warm paper backdrop with a single barely-there tint of color */
   background:
-    radial-gradient(circle at 8% 12%, #FCE3FF 0%, transparent 38%),
-    radial-gradient(circle at 92% 8%, #DBFFF3 0%, transparent 40%),
-    radial-gradient(circle at 78% 88%, #FFF1CF 0%, transparent 42%),
-    #F4EEFF;
+    radial-gradient(1200px 600px at 100% -5%, rgba(139,123,232,0.06) 0%, transparent 60%),
+    radial-gradient(1000px 500px at 0% 100%, rgba(55,211,174,0.06) 0%, transparent 60%),
+    #F6F2EC;
   background-attachment: fixed;
-  color: #2E1A47;
+  color: #2E2440;
   font-family: var(--font-body), "Plus Jakarta Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, .font-display {
+  letter-spacing: -0.015em;
 }
 
 .font-display { font-family: var(--font-display), "Baloo 2", sans-serif; }
 .font-data { font-family: var(--font-data), "Space Grotesk", monospace; }
 
-/* ---- Signature: sticker cards pinned to a board ---- */
-.sticker-card { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease; }
-.sticker-card:nth-child(3n+1) { transform: rotate(-1.4deg); }
-.sticker-card:nth-child(3n+2) { transform: rotate(1deg); }
-.sticker-card:nth-child(3n+3) { transform: rotate(-0.4deg); }
-.sticker-card:hover { transform: rotate(0deg) translateY(-6px) scale(1.015); }
-
-/* washi-tape strip used to "pin" cards */
-.tape {
-  position: absolute;
-  top: -11px;
-  left: 50%;
-  width: 78px;
-  height: 22px;
-  transform: translateX(-50%) rotate(-3deg);
-  background: repeating-linear-gradient(
-    45deg, rgba(255,214,107,0.85) 0 7px, rgba(255,228,150,0.85) 7px 14px
-  );
-  border: 1.5px solid rgba(46,26,71,0.25);
-  border-radius: 3px;
-  box-shadow: 0 2px 5px rgba(46,26,71,0.12);
-}
+/* ---- Product cards: calm, upright, a gentle lift on hover ---- */
+.sticker-card { transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), box-shadow 0.28s ease, border-color 0.28s ease; }
+.sticker-card:hover { transform: translateY(-4px); }
 
 /* price-tag motif */
-.price-tag::before {
-  content: "";
-  display: inline-block;
-  width: 7px; height: 7px;
-  margin-right: 6px;
-  border-radius: 50%;
-  background: #FFFBF5;
-  border: 2px solid currentColor;
-  vertical-align: middle;
-}
-
 /* skeleton shimmer */
-.skeleton { position: relative; overflow: hidden; background: #EDE3FB; }
+.skeleton { position: relative; overflow: hidden; background: #ECE6DD; border-radius: inherit; }
 .skeleton::after {
   content: ""; position: absolute; inset: 0;
   transform: translateX(-100%);
@@ -71,15 +45,16 @@ body {
 
 /* tidy scrollbars inside chat / panels */
 .nice-scroll::-webkit-scrollbar { width: 8px; }
-.nice-scroll::-webkit-scrollbar-thumb { background: #D9C7F5; border-radius: 99px; }
+.nice-scroll::-webkit-scrollbar-thumb { background: #D8D1E8; border-radius: 99px; }
 .nice-scroll::-webkit-scrollbar-track { background: transparent; }
 
 /* stagger helper for grids */
 .stagger > * { animation: fadeUp 0.5s ease both; }
 @keyframes fadeUp { 0% { transform: translateY(14px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 
-/* press feedback for chunky buttons */
-.btn-press:active { transform: translate(2px, 2px); box-shadow: none !important; }
+/* press feedback — a subtle settle rather than a hard offset */
+.btn-press { transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease; }
+.btn-press:active { transform: translateY(1px) scale(0.985); filter: brightness(0.97); }
 
 /* ======================================================
    NEW: Smooth page transitions
@@ -109,7 +84,7 @@ body {
   position: fixed;
   top: 0; left: 0;
   height: 3px;
-  background: linear-gradient(90deg, #FF5C8A, #A78BFA, #5BE9C2);
+  background: linear-gradient(90deg, #F0517C, #8B7BE8, #1FB897);
   border-radius: 0 3px 3px 0;
   z-index: 9999;
   animation: progressPulse 1.2s ease-in-out infinite;
@@ -126,18 +101,18 @@ body {
 .floating-label-group input {
   width: 100%;
   padding: 22px 18px 8px 18px;
-  border: 2.5px solid #2E1A47;
-  border-radius: 16px;
-  background: #FFFBF5;
+  border: 1.5px solid #DCD4EA;
+  border-radius: 14px;
+  background: #FBFAF7;
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   font-family: var(--font-body);
-  color: #2E1A47;
+  color: #2E2440;
 }
 .floating-label-group input:focus {
-  border-color: #A78BFA;
-  box-shadow: 3px 3px 0px #A78BFA;
+  border-color: #8B7BE8;
+  box-shadow: 0 0 0 3px rgba(139,123,232,0.18);
 }
 .floating-label-group label {
   position: absolute;
@@ -145,7 +120,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: #8A6FB0;
+  color: #8C8398;
   pointer-events: none;
   transition: top 0.2s, font-size 0.2s, color 0.2s;
   font-family: var(--font-body);
@@ -154,7 +129,7 @@ body {
 .floating-label-group input:not(:placeholder-shown) + label {
   top: 10px;
   font-size: 11px;
-  color: #A78BFA;
+  color: #8B7BE8;
   font-weight: 600;
 }
 
@@ -186,8 +161,8 @@ body {
    NEW: Hero text gradient animation
    ====================================================== */
 .hero-gradient-text {
-  background: linear-gradient(135deg, #3D2167 0%, #FF5C8A 45%, #A78BFA 80%, #5BE9C2 100%);
-  background-size: 300% 300%;
+  background: linear-gradient(120deg, #F0517C 0%, #8B7BE8 55%, #1FB897 100%);
+  background-size: 220% 220%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -205,7 +180,7 @@ body {
 .pulse-dot {
   display: inline-block;
   width: 8px; height: 8px;
-  background: #5BE9C2;
+  background: #1FB897;
   border-radius: 50%;
   position: relative;
 }
@@ -213,7 +188,7 @@ body {
   content: "";
   position: absolute; inset: -3px;
   border-radius: 50%;
-  border: 2px solid #5BE9C2;
+  border: 2px solid #1FB897;
   animation: pulsering 1.5s ease-out infinite;
 }
 @keyframes pulsering {
@@ -229,7 +204,7 @@ body {
 }
 .heart-btn:hover  { transform: scale(1.2); }
 .heart-btn:active { transform: scale(0.9); }
-.heart-btn.hearted { color: #FF5C8A; }
+.heart-btn.hearted { color: #F0517C; }
 
 /* ======================================================
    NEW: FAB (Floating Action Button)
@@ -253,10 +228,10 @@ body {
   transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .category-pill.active {
-  background: #2E1A47;
-  color: #FFFBF5;
-  border-color: #2E1A47;
-  box-shadow: 3px 3px 0px rgba(46,26,71,0.35);
+  background: #2E2440;
+  color: #FFFFFF;
+  border-color: #2E2440;
+  box-shadow: 0 4px 12px -4px rgba(46,36,64,0.4);
 }
 
 /* ======================================================
@@ -266,8 +241,8 @@ body {
   transition: box-shadow 0.25s, border-color 0.25s;
 }
 .search-bar:focus-within {
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.35), 3px 3px 0px #A78BFA;
-  border-color: #A78BFA;
+  box-shadow: 0 0 0 3px rgba(139, 123, 232, 0.2);
+  border-color: #8B7BE8;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -277,7 +252,7 @@ body {
 }
 
 *:focus-visible {
-  outline: 3px solid #A78BFA;
+  outline: 3px solid #8B7BE8;
   outline-offset: 2px;
   border-radius: 6px;
 }

@@ -3,7 +3,7 @@ import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
-  title: "Campus Bazaar 🛍️ — buy & sell with people who actually go here",
+  title: "Campus Bazaar — buy & sell with people who actually go here",
   description:
     "A peer-to-peer campus thrift marketplace. List your stuff, message buyers, and snag campus steals — all with your university email.",
 };

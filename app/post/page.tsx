@@ -96,21 +96,21 @@ export default function PostListingPage() {
     <div className="min-h-screen flex items-center justify-center px-5 py-10">
       <form
         onSubmit={handleSubmit}
-        className="bg-card border-[3px] border-ink rounded-chunky shadow-chunkyHover p-7 sm:p-8 max-w-md w-full animate-fadeUp"
+        className="bg-card border border-line rounded-chunky shadow-chunkyHover p-7 sm:p-8 max-w-md w-full animate-fadeUp"
       >
-        <h1 className="font-display text-2xl text-grape mb-1">List an item ✨</h1>
+        <h1 className="font-display text-2xl text-grape mb-1">List an item</h1>
         <p className="text-xs text-grapeLight mb-5">A clear photo and honest price sell fastest.</p>
 
         {/* Photo */}
         <label className="block text-xs font-semibold text-grape mb-1.5">Photo (optional)</label>
-        <label className="relative flex items-center justify-center h-40 mb-4 rounded-2xl border-2 border-dashed border-ink/40 bg-white cursor-pointer overflow-hidden hover:border-ink transition-colors">
+        <label className="relative flex items-center justify-center h-40 mb-4 rounded-2xl border-2 border-dashed border-line bg-white cursor-pointer overflow-hidden hover:border-grapeLight transition-colors">
           {preview ? (
             <Image src={preview} alt="preview" fill className="object-cover" />
           ) : (
             <span className="text-sm text-grapeLight text-center px-4">
-              📷 Tap to add a photo
+              Tap to add a photo
               <br />
-              <span className="text-[11px]">No photo? We'll use a cute emoji instead.</span>
+              <span className="text-[11px]">No photo? We&apos;ll add a placeholder for you.</span>
             </span>
           )}
           <input type="file" accept="image/*" onChange={onPickImage} className="hidden" />
@@ -122,7 +122,7 @@ export default function PostListingPage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="e.g. Mini fridge — barely used"
-          className="w-full px-3.5 py-2.5 border-2 border-ink rounded-xl text-sm mb-3.5 outline-none focus:shadow-btn transition-shadow"
+          className="w-full px-3.5 py-2.5 border border-line rounded-xl text-sm mb-3.5 outline-none focus:shadow-btn transition-shadow"
         />
 
         <label className="block text-xs font-semibold text-grape mb-1.5">Price (₹)</label>
@@ -133,7 +133,7 @@ export default function PostListingPage() {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           placeholder="1500"
-          className="w-full px-3.5 py-2.5 border-2 border-ink rounded-xl text-sm mb-3.5 outline-none font-data focus:shadow-btn transition-shadow"
+          className="w-full px-3.5 py-2.5 border border-line rounded-xl text-sm mb-3.5 outline-none font-data focus:shadow-btn transition-shadow"
         />
 
         <label className="block text-xs font-semibold text-grape mb-1.5">Category</label>
@@ -143,11 +143,12 @@ export default function PostListingPage() {
               type="button"
               key={c}
               onClick={() => setCategory(c)}
-              className={`px-2 py-2 rounded-xl text-xs font-semibold border-2 transition-colors ${
-                category === c ? "bg-mint border-ink" : "bg-white border-line text-grape hover:border-ink"
+              className={`px-2 py-2 rounded-xl text-xs font-semibold border transition-colors ${
+                category === c
+                  ? "bg-mint/15 border-mint text-mintDark"
+                  : "bg-white border-line text-grape hover:border-grapeLight"
               }`}
             >
-              <span className="mr-1">{emojiMap[c]}</span>
               {c}
             </button>
           ))}
@@ -159,16 +160,16 @@ export default function PostListingPage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Condition, pickup spot, why you're selling…"
-          className="w-full px-3.5 py-2.5 border-2 border-ink rounded-xl text-sm mb-4 outline-none resize-none focus:shadow-btn transition-shadow"
+          className="w-full px-3.5 py-2.5 border border-line rounded-xl text-sm mb-4 outline-none resize-none focus:shadow-btn transition-shadow"
         />
 
         {error && <p className="text-coralDark text-xs font-medium mb-3">{error}</p>}
 
         <button
           disabled={loading}
-          className="w-full bg-coral text-white border-2 border-ink py-3 rounded-xl font-semibold shadow-btn btn-press transition-transform disabled:opacity-60"
+          className="w-full bg-coral text-white border border-line py-3 rounded-xl font-semibold shadow-btn btn-press transition-transform disabled:opacity-60"
         >
-          {loading ? "Posting…" : "Post listing 🚀"}
+          {loading ? "Posting…" : "Post listing"}
         </button>
       </form>
     </div>

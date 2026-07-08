@@ -61,16 +61,16 @@ export default function RequestButton({
     return (
       <button
         onClick={() => router.push(`/chat/${existingRequest.id}`)}
-        className="w-full sm:w-auto bg-mint border-2 border-ink px-5 py-3 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-transform"
+        className="w-full sm:w-auto bg-mint border border-line px-5 py-3 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-transform"
       >
-        💬 Open chat
+         Open chat
       </button>
     );
   }
 
   if (existingRequest?.status === "pending") {
     return (
-      <p className="bg-white border-2 border-line px-5 py-3 rounded-2xl font-semibold text-sm text-grapeLight text-center">
+      <p className="bg-white border border-line px-5 py-3 rounded-2xl font-semibold text-sm text-grapeLight text-center">
         Request sent — waiting for the seller 
       </p>
     );
@@ -78,7 +78,7 @@ export default function RequestButton({
 
   if (soldOrReserved) {
     return (
-      <p className="bg-white border-2 border-line px-5 py-3 rounded-2xl font-semibold text-sm text-grapeLight text-center">
+      <p className="bg-white border border-line px-5 py-3 rounded-2xl font-semibold text-sm text-grapeLight text-center">
         This item is no longer available.
       </p>
     );
@@ -88,9 +88,9 @@ export default function RequestButton({
     <button
       onClick={handleRequest}
       disabled={busy}
-      className="w-full sm:w-auto bg-coral text-white border-2 border-ink px-5 py-3 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-transform disabled:opacity-60"
+      className="w-full sm:w-auto bg-coral text-white border border-line px-5 py-3 rounded-2xl font-semibold text-sm shadow-btn btn-press transition-transform disabled:opacity-60"
     >
-      {busy ? "Sending…" : existingRequest?.status === "declined" ? "🙋 Ask again" : "🙋 Request to buy"}
+      {busy ? "Sending…" : existingRequest?.status === "declined" ? "Ask again" : "Request to buy"}
     </button>
   );
 }
