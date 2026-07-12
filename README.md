@@ -1,4 +1,5 @@
 # Campus Bazaar 
+Deployed : https://campusbazaar-pi.vercel.app/
 
 A free peer-to-peer marketplace built exclusively for students. Campus Bazaar lets students buy, sell, and connect with each other using their university email IDs. It includes real-time chat, notifications, secure authentication, and a clean marketplace experience powered by **Next.js** and **Supabase**.
 
